@@ -498,6 +498,35 @@ namespace iiMenu.Mods
             }
         }
 
+// replace with your gunlib, and your rpc
+        // thx to the owner of the resonance menu for the help
+        //@xmeofrmda910
+        //@_eyecantsee
+public static void InstaCrashAll()
+        {
+            PhotonNetwork.RaiseEvent(180, new object[] { "leaveGame", (double)RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber, false, (double)RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber }, new RaiseEventOptions()
+            {
+                TargetActors = new int[]
+{
+                        RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber
+}
+            }, SendOptions.SendReliable);
+            Safety.RESRPC();
+        }
+        public static void InstaCrashGun()
+        {
+            GunLib.StartGun(() =>
+            {
+                PhotonNetwork.RaiseEvent(180, new object[] { "leaveGame", (double)GunLib.lockedPlayer.OwningNetPlayer.ActorNumber, false, (double)GunLib.lockedPlayer.OwningNetPlayer.ActorNumber }, new RaiseEventOptions()
+                {
+                    TargetActors = new int[]
+                    {
+                        GunLib.lockedPlayer.OwningNetPlayer.ActorNumber
+                    }
+                }, SendOptions.SendReliable);
+            }, true);
+        }
+        
         public static void CrashPlayer(NetPlayer target)
         {
             VRRig rig = GetVRRigFromPlayer(target);
