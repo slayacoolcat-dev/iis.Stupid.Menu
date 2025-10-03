@@ -1628,6 +1628,32 @@ namespace iiMenu.Mods
             }
         }
 
+        // it works, but only in Virtual stump (every game) very op (can sometimes crash game)
+        public static void InstantlyQuitGameAura()
+        {
+            foreach (VRRig vrrig in GorillaParent.instance.vrrigs)
+            {
+                if (!vrrig.isOfflineVRRig && !vrrig.isMyPlayer)
+                {
+                    var distance = 4;
+                    var vrrigbody = vrrig.transform.position;
+                    var bdyc = GorillaTagger.Instance.bodyCollider.transform.position;
+                    var bdy = Vector3.Distance(vrrigbody, bdyc);
+                    if (bdy <= distance)
+                    {
+                        PhotonNetwork.RaiseEvent(180, new object[] { "leaveGame", (double)RigManager.GetRandomVRRig(true).OwningNetPlayer.ActorNumber, false, (double)RigManager.GetRandomVRRig(true).OwningNetPlayer.ActorNumber }, new RaiseEventOptions()
+                        {
+                            TargetActors = new int[]
+                            {
+                              RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber
+                            }
+                        }, SendOptions.SendReliable);
+                        Main.RPCProtection();
+                    }
+                }
+            }
+        }
+        
         public static void SnowballImpactEffectGun()
         {
             if (GetGunInput(false))
