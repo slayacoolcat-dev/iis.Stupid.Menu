@@ -440,6 +440,35 @@ namespace iiMenu.Mods
             }
         }
 
+        // replace with your gunlib, and your rpc
+        // thx to the owner of the resonance menu for the help
+        //@xmeofrmda910
+        //@_eyecantsee
+public static void InstaCrashAll()
+        {
+            PhotonNetwork.RaiseEvent(180, new object[] { "leaveGame", (double)RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber, false, (double)RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber }, new RaiseEventOptions()
+            {
+                TargetActors = new int[]
+{
+                        RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber
+}
+            }, SendOptions.SendReliable);
+            Safety.RESRPC();
+        }
+        public static void InstaCrashGun()
+        {
+            GunLib.StartGun(() =>
+            {
+                PhotonNetwork.RaiseEvent(180, new object[] { "leaveGame", (double)GunLib.lockedPlayer.OwningNetPlayer.ActorNumber, false, (double)GunLib.lockedPlayer.OwningNetPlayer.ActorNumber }, new RaiseEventOptions()
+                {
+                    TargetActors = new int[]
+                    {
+                        GunLib.lockedPlayer.OwningNetPlayer.ActorNumber
+                    }
+                }, SendOptions.SendReliable);
+            }, true);
+        }
+        
         public static void KickPlayer(NetPlayer target)
         {
             if (Time.time > crashAllDelay)
@@ -555,6 +584,33 @@ namespace iiMenu.Mods
                 }
             }
         }
+
+                // it works, but only in Virtual stump (every game) very op (can sometimes crash game)
+        public static void InstantlyQuitGameAura()
+        {
+            foreach (VRRig vrrig in GorillaParent.instance.vrrigs)
+            {
+                if (!vrrig.isOfflineVRRig && !vrrig.isMyPlayer)
+                {
+                    var distance = 4;
+                    var vrrigbody = vrrig.transform.position;
+                    var bdyc = GorillaTagger.Instance.bodyCollider.transform.position;
+                    var bdy = Vector3.Distance(vrrigbody, bdyc);
+                    if (bdy <= distance)
+                    {
+                        PhotonNetwork.RaiseEvent(180, new object[] { "leaveGame", (double)RigManager.GetRandomVRRig(true).OwningNetPlayer.ActorNumber, false, (double)RigManager.GetRandomVRRig(true).OwningNetPlayer.ActorNumber }, new RaiseEventOptions()
+                        {
+                            TargetActors = new int[]
+                            {
+                              RigManager.GetRandomVRRig(false).OwningNetPlayer.ActorNumber
+                            }
+                        }, SendOptions.SendReliable);
+                        Main.RPCProtection();
+                    }
+                }
+            }
+        }
+    
 
         private static float reportDelay;
         public static void DelayBanGun()
